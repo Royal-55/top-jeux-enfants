@@ -2,44 +2,52 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jeux pour Enfants</title>
+  <title>Top Jeux Enfants</title>
   <style>
     body {
-      background-color: #f0f8ff;
-      font-family: Comic Sans MS, cursive, sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 20px;
+      background: #f0f8ff;
     }
-
     h1 {
-      color: #ff69b4;
+      color: #4CAF50;
     }
-
-    .game {
-      display: inline-block;
-      margin: 20px;
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .menu a {
+      display: block;
       padding: 20px;
-      background: #ffe4e1;
-      border-radius: 15px;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-      cursor: pointer;
+      background: #fff;
+      border: 2px solid #4CAF50;
+      border-radius: 10px;
       text-decoration: none;
       color: #333;
       font-size: 18px;
+      transition: 0.3s;
     }
-
-    .game:hover {
-      background: #ffb6c1;
+    .menu a:hover {
+      background: #4CAF50;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <h1>🎮 Bienvenue sur mon site de jeux pour enfants 🎉</h1>
-  <p>Choisis ton jeu préféré :</p>
-
-  <a href="https://www.jeux-gratuits.com/jeu-coloriage-enfant.html" class="game">Coloriage 🎨</a>
-  <a href="https://www.jeux-gratuits.com/jeu-memoire-enfant.html" class="game">Jeu de Mémoire 🧠</a>
-  <a href="https://www.jeux-gratuits.com/jeu-puzzle-enfant.html" class="game">Puzzle 🧩</a>
+  <h1>Bienvenue sur Top Jeux Enfants 🎉</h1>
+  <div class="menu">
+    <a href="jeux/memoire/index.html">Jeu de Mémoire</a>
+    <a href="jeux/puzzle/index.html">Puzzle</a>
+    <a href="jeux/course/index.html">Course</a>
+    <a href="jeux/habillage/index.html">Habillage</a>
+    <a href="jeux/quiz/index.html">Quiz</a>
+    <a href="jeux/dessin/index.html">Dessin</a>
+    <a href="jeux/flappy/index.html">Flappy Bird</a>
+    <a href="jeux/2048/index.html">2048</a>
+  </div>
 </body>
 </html>
