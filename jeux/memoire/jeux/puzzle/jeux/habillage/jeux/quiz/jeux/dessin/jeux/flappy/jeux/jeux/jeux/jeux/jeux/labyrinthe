@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Labyrinthe</title>
+  <style>
+    body { text-align: center; background: #222; color: #fff; }
+    canvas { border: 2px solid #fff; background: #000; }
+  </style>
+</head>
+<body>
+  <h1>Jeu de Labyrinthe</h1>
+  <canvas id="maze" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('maze');
+    const ctx = canvas.getContext('2d');
+
+    const maze = [
+      [1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,1],
+      [1,0,1,0,1,0,1,1],
+      [1,0,1,0,0,0,0,1],
+      [1,0,1,1,1,1,0,1],
+      [1,0,0,0,0,1,0,1],
+      [1,1,1,1,0,0,0,1],
+      [1,1,1,1,1,1,1,1]
+    ];
+
+    let player = { x: 1, y: 1 };
+
+    const cellSize = 50;
+
+    function drawMaze() {
+      for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+          if (maze[y][x] === 1) {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          } else {
+            ctx.clearRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          }
+        }
+      }
+
+      ctx.fillStyle = 'red';
+      ctx.fillRect(player.x * cellSize + 10, player.y * cellSize + 10, cellSize - 20, cellSize - 20);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      let newX = player.x;
+      let newY = player.y;
+
+      if (e.key === 'ArrowUp') newY--;
+      if (e.key === 'ArrowDown') newY++;
+      if (e.key === 'ArrowLeft') newX--;
+      if (e.key === 'ArrowRight') newX++;
+
+      if (maze[newY][newX] === 0) {
+        player.x = newX;
+        player.y = newY;
+      }
+
+      if (player.x === 6 && player.y === 6) {
+        alert('Bravo ! Vous avez trouvé la sortie !');
+        player = { x: 1, y: 1 };
+      }
+
+      drawMaze();
+    });
+
+    drawMaze();
+  </script>
+</body>
+</html>
+
