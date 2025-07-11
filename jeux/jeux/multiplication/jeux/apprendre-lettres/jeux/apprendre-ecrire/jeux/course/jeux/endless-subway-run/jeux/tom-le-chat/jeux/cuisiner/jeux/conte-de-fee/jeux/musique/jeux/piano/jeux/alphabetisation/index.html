@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jeu d'Alphabétisation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    button {
+      margin: 5px;
+      padding: 15px 20px;
+      font-size: 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #mot {
+      margin-top: 30px;
+      font-size: 2rem;
+      color: #2a7ae2;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Jeu d'Alphabétisation</h1>
+  <p>Clique sur une lettre pour entendre sa prononciation et découvrir un mot.</p>
+
+  <div id="lettres"></div>
+  <div id="mot"></div>
+
+  <script>
+    const lettres = [
+      { lettre: 'A', mot: 'Arbre', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/a--_fr_1.mp3' },
+      { lettre: 'B', mot: 'Bateau', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/b--_fr_1.mp3' },
+      { lettre: 'C', mot: 'Chat', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/c--_fr_1.mp3' },
+      { lettre: 'D', mot: 'Dauphin', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/d--_fr_1.mp3' },
+      { lettre: 'E', mot: 'Étoile', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/e--_fr_1.mp3' },
+      { lettre: 'F', mot: 'Fleur', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/f--_fr_1.mp3' },
+      { lettre: 'G', mot: 'Guitare', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/g--_fr_1.mp3' },
+      { lettre: 'H', mot: 'Hélicoptère', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/h--_fr_1.mp3' },
+      { lettre: 'I', mot: 'Igloo', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/i--_fr_1.mp3' },
+      { lettre: 'J', mot: 'Jardin', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/j--_fr_1.mp3' },
+      { lettre: 'K', mot: 'Koala', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/k--_fr_1.mp3' },
+      { lettre: 'L', mot: 'Lune', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/l--_fr_1.mp3' },
+      { lettre: 'M', mot: 'Maison', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/m--_fr_1.mp3' },
+      { lettre: 'N', mot: 'Nuage', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/n--_fr_1.mp3' },
+      { lettre: 'O', mot: 'Orange', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/o--_fr_1.mp3' },
+      { lettre: 'P', mot: 'Pomme', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/p--_fr_1.mp3' },
+      { lettre: 'Q', mot: 'Quatre', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/q--_fr_1.mp3' },
+      { lettre: 'R', mot: 'Roue', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/r--_fr_1.mp3' },
+      { lettre: 'S', mot: 'Soleil', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/s--_fr_1.mp3' },
+      { lettre: 'T', mot: 'Tigre', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/t--_fr_1.mp3' },
+      { lettre: 'U', mot: 'Uniforme', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/u--_fr_1.mp3' },
+      { lettre: 'V', mot: 'Vache', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/v--_fr_1.mp3' },
+      { lettre: 'W', mot: 'Wagon', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/w--_fr_1.mp3' },
+      { lettre: 'X', mot: 'Xylophone', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/x--_fr_1.mp3' },
+      { lettre: 'Y', mot: 'Yaourt', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/y--_fr_1.mp3' },
+      { lettre: 'Z', mot: 'Zèbre', audio: 'https://ssl.gstatic.com/dictionary/static/sounds/oxford/z--_fr_1.mp3' },
+    ];
+
+    const lettresDiv = document.getElementById('lettres');
+    const motDiv = document.getElementById('mot');
+
+    lettres.forEach(({lettre, mot, audio}) => {
+      const btn = document.createElement('button');
+      btn.textContent = lettre;
+      btn.onclick = () => {
+        motDiv.textContent = `${mot} commence par la lettre ${lettre}`;
+        const sound = new Audio(audio);
+        sound.play();
+      };
+      lettresDiv.appendChild(btn);
+    });
+  </script>
+</body>
+</html>
+Ajout du jeu d'Alphabétisation
