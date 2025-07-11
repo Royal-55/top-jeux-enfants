@@ -1,10 +1,54 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Jeu de Mémoire</title>
+  <style>
+    body { font-family: Arial; text-align: center; }
+    .grid { display: grid; grid-template-columns: repeat(4, 80px); grid-gap: 10px; justify-content: center; }
+    .card { width: 80px; height: 80px; background: #ccc; cursor: pointer; font-size: 40px; display: flex; align-items: center; justify-content: center; }
+    .matched { background: #8BC34A; cursor: default; }
+  </style>
 </head>
 <body>
-  <h1>Jeu de Mémoire - Bientôt disponible !</h1>
+  <h1>Jeu de Mémoire</h1>
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const emojis = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼'];
+    let cards = emojis.concat(emojis).sort(() => 0.5 - Math.random());
+    let grid = document.getElementById('grid');
+    let selected = [];
+    let matched = [];
+
+    cards.forEach((emoji, index) => {
+      let card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.index = index;
+      card.innerHTML = '';
+      grid.appendChild(card);
+
+      card.addEventListener('click', () => {
+        if (matched.includes(index) || selected.includes(index)) return;
+        card.innerHTML = emoji;
+        selected.push(index);
+
+        if (selected.length === 2) {
+          let [a, b] = selected;
+          if (cards[a] === cards[b]) {
+            matched.push(a, b);
+            document.querySelectorAll('.card')[a].classList.add('matched');
+            document.querySelectorAll('.card')[b].classList.add('matched');
+          } else {
+            setTimeout(() => {
+              document.querySelectorAll('.card')[a].innerHTML = '';
+              document.querySelectorAll('.card')[b].innerHTML = '';
+            }, 500);
+          }
+          selected = [];
+        }
+      });
+    });
+  </script>
 </body>
 </html>
