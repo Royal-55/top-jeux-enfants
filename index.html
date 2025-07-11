@@ -4,50 +4,25 @@
   <meta charset="UTF-8" />
   <title>Top Jeux Enfants</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f0f8ff;
-    }
-    h1 {
-      color: #4CAF50;
-    }
-    .menu {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 40px;
-    }
-    .menu a {
-      display: block;
-      padding: 20px;
-      background: #fff;
-      border: 2px solid #4CAF50;
-      border-radius: 10px;
-      text-decoration: none;
-      color: #333;
-      font-size: 18px;
-      transition: 0.3s;
-    }
-    .menu a:hover {
-      background: #4CAF50;
-      color: white;
-    }
+    body { text-align: center; font-family: Arial, sans-serif; background: #f0f8ff; }
+    h1 { margin-top: 50px; }
+    .games { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 40px; }
+    .game { border: 2px solid #333; border-radius: 10px; margin: 10px; padding: 20px; width: 200px; background: #fff; text-decoration: none; color: #333; font-weight: bold; }
+    .game:hover { background: #e0f7fa; }
   </style>
 </head>
 <body>
-  <h1>Bienvenue sur Top Jeux Enfants 🎉</h1>
-  <div class="menu">
-    <a href="jeux/memoire/index.html">Jeu de Mémoire</a>
-    <a href="jeux/puzzle/index.html">Puzzle</a>
-    <a href="jeux/course/index.html">Course</a>
-    <a href="jeux/habillage/index.html">Habillage</a>
-    <a href="jeux/quiz/index.html">Quiz</a>
-    <a href="jeux/dessin/index.html">Dessin</a>
-    <a href="jeux/flappy/index.html">Flappy Bird</a>
-    <a href="jeux/2048/index.html">2048</a>
+  <h1>🎉 Bienvenue sur Top Jeux Enfants 🎉</h1>
+  <p>Amuse-toi avec nos jeux gratuits et sans pub !</p>
+
+  <div class="games">
+    <a class="game" href="jeux/memoire/index.html">🧠 Mémoire</a>
+    <a class="game" href="jeux/puzzle/index.html">🧩 Puzzle</a>
+    <a class="game" href="jeux/labyrinthe/index.html">🧭 Labyrinthe</a>
+    <a class="game" href="jeux/multiplication/index.html">✏️ Multiplication</a>
+    <a class="game" href="jeux/apprendre-lettres/index.html">🔤 Apprendre les Lettres</a>
+    <a class="game" href="jeux/apprendre-ecrire/index.html">📝 Apprendre à Écrire</a>
   </div>
 </body>
 </html>
+Mise à jour de la page d'accueil
