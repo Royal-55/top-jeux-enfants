@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jeu de Piano</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .touche {
+      display: inline-block;
+      width: 60px;
+      height: 200px;
+      margin: 2px;
+      background: white;
+      border: 1px solid black;
+      border-radius: 5px;
+      box-shadow: 0 4px #999;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+    .touche:active {
+      box-shadow: none;
+      transform: translateY(4px);
+    }
+    .touche.noire {
+      width: 40px;
+      height: 120px;
+      background: black;
+      position: absolute;
+      margin-left: -20px;
+      z-index: 1;
+      top: 0;
+      border-radius: 0 0 4px 4px;
+    }
+    .clavier {
+      position: relative;
+      width: 480px;
+      margin: 20px auto;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎹 Jeu de Piano</h1>
+  <p>Clique sur les touches pour jouer des notes.</p>
+
+  <div class="clavier">
+    <div class="touche" data-note="C"></div>
+    <div class="touche noire" data-note="Csharp" style="left: 45px;"></div>
+    <div class="touche" data-note="D" style="margin-left: 60px;"></div>
+    <div class="touche noire" data-note="Dsharp" style="left: 105px;"></div>
+    <div class="touche" data-note="E" style="margin-left: 120px;"></div>
+    <div class="touche" data-note="F" style="margin-left: 180px;"></div>
+    <div class="touche noire" data-note="Fsharp" style="left: 225px;"></div>
+    <div class="touche" data-note="G" style="margin-left: 240px;"></div>
+    <div class="touche noire" data-note="Gsharp" style="left: 285px;"></div>
+    <div class="touche" data-note="A" style="margin-left: 300px;"></div>
+    <div class="touche noire" data-note="Asharp" style="left: 345px;"></div>
+    <div class="touche" data-note="B" style="margin-left: 360px;"></div>
+  </div>
+
+  <script>
+    const notes = {
+      C: new Audio('https://piano-mp3.s3.amazonaws.com/C4.mp3'),
+      Csharp: new Audio('https://piano-mp3.s3.amazonaws.com/Cs4.mp3'),
+      D: new Audio('https://piano-mp3.s3.amazonaws.com/D4.mp3'),
+      Dsharp: new Audio('https://piano-mp3.s3.amazonaws.com/Ds4.mp3'),
+      E: new Audio('https://piano-mp3.s3.amazonaws.com/E4.mp3'),
+      F: new Audio('https://piano-mp3.s3.amazonaws.com/F4.mp3'),
+      Fsharp: new Audio('https://piano-mp3.s3.amazonaws.com/Fs4.mp3'),
+      G: new Audio('https://piano-mp3.s3.amazonaws.com/G4.mp3'),
+      Gsharp: new Audio('https://piano-mp3.s3.amazonaws.com/Gs4.mp3'),
+      A: new Audio('https://piano-mp3.s3.amazonaws.com/A4.mp3'),
+      Asharp: new Audio('https://piano-mp3.s3.amazonaws.com/As4.mp3'),
+      B: new Audio('https://piano-mp3.s3.amazonaws.com/B4.mp3')
+    };
+
+    document.querySelectorAll('.touche').forEach(touche => {
+      touche.addEventListener('click', () => {
+        const note = touche.getAttribute('data-note');
+        if(notes[note]){
+          notes[note].currentTime = 0;
+          notes[note].play();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+Ajout du jeu Piano
