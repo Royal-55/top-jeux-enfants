@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Apprendre à Écrire</title>
+  <style>
+    body { text-align: center; font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
+    input { font-size: 2em; padding: 10px; width: 300px; text-align: center; }
+    button { font-size: 1.5em; padding: 10px 20px; margin: 20px; }
+    #message { font-size: 1.5em; margin-top: 20px; color: green; }
+    #wordToWrite { font-size: 3em; margin: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Apprends à Écrire</h1>
+  <div id="wordToWrite"></div>
+  <input type="text" id="inputWord" autocomplete="off" placeholder="Tape le mot ici" />
+  <br/>
+  <button onclick="checkWord()">Vérifier</button>
+  <div id="message"></div>
+
+  <script>
+    const words = ['chat', 'chien', 'pomme', 'maison', 'livre', 'soleil', 'école', 'arbre'];
+    let currentWord = '';
+
+    function newWord() {
+      currentWord = words[Math.floor(Math.random() * words.length)];
+      document.getElementById('wordToWrite').textContent = currentWord;
+      document.getElementById('inputWord').value = '';
+      document.getElementById('message').textContent = '';
+      document.getElementById('inputWord').focus();
+    }
+
+    function checkWord() {
+      const input = document.getElementById('inputWord').value.trim().toLowerCase();
+      const messageDiv = document.getElementById('message');
+      if (input === currentWord) {
+        messageDiv.style.color = 'green';
+        messageDiv.textContent = 'Bravo, c\'est correct ! 🎉';
+        setTimeout(newWord, 1500);
+      } else {
+        messageDiv.style.color = 'red';
+        messageDiv.textContent = 'Essaie encore...';
+      }
+    }
+
+    newWord();
+  </script>
+</body>
+</html>
