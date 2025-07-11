@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Apprendre les Lettres</title>
+  <style>
+    body { text-align: center; font-family: Arial, sans-serif; background: #fff8dc; padding: 20px; }
+    .letter { font-size: 5em; margin: 20px; cursor: pointer; display: inline-block; padding: 20px; border: 2px solid #333; border-radius: 10px; user-select: none; }
+    #message { font-size: 1.5em; margin-top: 20px; color: green; }
+  </style>
+</head>
+<body>
+  <h1>Apprends les Lettres</h1>
+  <p>Clique sur la lettre demandée</p>
+  <div id="targetLetter" style="font-size:4em; margin: 20px;"></div>
+  <div id="lettersContainer"></div>
+  <div id="message"></div>
+
+  <script>
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const targetLetterDiv = document.getElementById('targetLetter');
+    const lettersContainer = document.getElementById('lettersContainer');
+    const messageDiv = document.getElementById('message');
+
+    let targetLetter = '';
+
+    function shuffle(array) {
+      for(let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function newRound() {
+      messageDiv.textContent = '';
+      shuffle(letters);
+      targetLetter = letters[Math.floor(Math.random() * letters.length)];
+      targetLetterDiv.textContent = targetLetter;
+
+      lettersContainer.innerHTML = '';
+      letters.forEach(letter => {
+        const span = document.createElement('span');
+        span.textContent = letter;
+        span.className = 'letter';
+        span.onclick = () => checkLetter(letter);
+        lettersContainer.appendChild(span);
+      });
+    }
+
+    function checkLetter(clicked) {
+      if(clicked === targetLetter) {
+        messageDiv.style.color = 'green';
+        messageDiv.textContent = 'Bravo ! 🎉';
+        setTimeout(newRound, 1000);
+      } else {
+        messageDiv.style.color = 'red';
+        messageDiv.textContent = 'Essaie encore...';
+      }
+    }
+
+    newRound();
+  </script>
+</body>
+</html>
 
