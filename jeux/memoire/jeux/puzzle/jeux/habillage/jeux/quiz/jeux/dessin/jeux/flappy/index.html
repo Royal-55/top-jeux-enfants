@@ -1,11 +1,69 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>flappy</title>
+  <meta charset="UTF-8" />
+  <title>Flappy Bird Simplifié</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #70c5ce; }
+    canvas { display: block; margin: 0 auto; background: #4ec0ca; }
+  </style>
 </head>
 <body>
-  <h1>flappy - Bientôt disponible !</h1>
+  <canvas id="game" width="320" height="480"></canvas>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    let bird = { x: 50, y: 150, w: 20, h: 20, gravity: 0, lift: -5 };
+    let pipes = [];
+    let frame = 0;
+
+    document.addEventListener('keydown', () => { bird.gravity = bird.lift; });
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Bird
+      bird.gravity += 0.2;
+      bird.y += bird.gravity;
+      ctx.fillStyle = 'yellow';
+      ctx.fillRect(bird.x, bird.y, bird.w, bird.h);
+
+      // Pipes
+      if (frame % 100 === 0) {
+        let top = Math.random() * 200 + 50;
+        let bottom = canvas.height - top - 120;
+        pipes.push({ x: canvas.width, top: top, bottom: bottom });
+      }
+
+      for (let i = 0; i < pipes.length; i++) {
+        let p = pipes[i];
+        p.x -= 2;
+
+        ctx.fillStyle = 'green';
+        ctx.fillRect(p.x, 0, 50, p.top);
+        ctx.fillRect(p.x, canvas.height - p.bottom, 50, p.bottom);
+
+        if (
+          bird.x < p.x + 50 && bird.x + bird.w > p.x &&
+          (bird.y < p.top || bird.y + bird.h > canvas.height - p.bottom)
+        ) {
+          alert('Game Over !');
+          document.location.reload();
+        }
+      }
+
+      if (bird.y > canvas.height || bird.y < 0) {
+        alert('Game Over !');
+        document.location.reload();
+      }
+
+      frame++;
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
 </body>
 </html>
-
