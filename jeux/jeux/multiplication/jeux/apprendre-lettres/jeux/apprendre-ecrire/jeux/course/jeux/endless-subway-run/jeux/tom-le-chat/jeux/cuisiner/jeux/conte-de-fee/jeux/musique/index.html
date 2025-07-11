@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jeu de Musique</title>
+  <style>
+    button {
+      font-size: 2rem;
+      margin: 10px;
+      padding: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎼 Bienvenue au Jeu de Musique !</h1>
+  <p>Appuie sur les boutons pour jouer des notes.</p>
+
+  <button onclick="jouerNote('do')">Do</button>
+  <button onclick="jouerNote('re')">Ré</button>
+  <button onclick="jouerNote('mi')">Mi</button>
+  <button onclick="jouerNote('fa')">Fa</button>
+  <button onclick="jouerNote('sol')">Sol</button>
+  <button onclick="jouerNote('la')">La</button>
+  <button onclick="jouerNote('si')">Si</button>
+
+  <script>
+    function jouerNote(note) {
+      alert('Tu as joué la note ' + note + ' 🎵');
+    }
+  </script>
+</body>
+</html>
+Ajout du jeu Musique
