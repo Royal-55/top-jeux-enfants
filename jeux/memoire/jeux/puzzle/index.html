@@ -1,10 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Puzzle</title>
+  <meta charset="UTF-8" />
+  <title>Puzzle Glisser-Déposer</title>
+  <style>
+    body { font-family: Arial; text-align: center; }
+    #puzzle { width: 240px; margin: 20px auto; display: flex; flex-wrap: wrap; }
+    .piece {
+      width: 80px; height: 80px; margin: 2px;
+      background: #90caf9; display: flex; align-items: center; justify-content: center;
+      font-size: 30px; font-weight: bold; border: 2px solid #1976d2; cursor: grab;
+    }
+  </style>
 </head>
 <body>
-  <h1>Puzzle - Bientôt disponible !</h1>
+  <h1>Puzzle Glisser-Déposer</h1>
+  <div id="puzzle"></div>
+
+  <script>
+    let puzzle = document.getElementById('puzzle');
+    let numbers = [1,2,3,4,5,6,7,8,9];
+    numbers.sort(() => 0.5 - Math.random());
+
+    numbers.forEach(num => {
+      let div = document.createElement('div');
+      div.className = 'piece';
+      div.draggable = true;
+      div.textContent = num;
+      puzzle.appendChild(div);
+    });
+
+    let dragSrcEl = null;
+
+    function handleDragStart(e) {
+      dragSrcEl = this;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.innerHTML);
+    }
+
+    function handleDrop(e) {
+      if (dragSrcEl !== this) {
+        dragSrcEl.innerHTML = this.innerHTML;
+        this.innerHTML = e.dataTransfer.getData('text/html');
+      }
+      return false;
+    }
+
+    function handleDragOver(e) {
+      if (e.preventDefault) e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+
+    let pieces = document.querySelectorAll('.piece');
+    pieces.forEach(piece => {
+      piece.addEventListener('dragstart', handleDragStart, false);
+      piece.addEventListener('drop', handleDrop, false);
+      piece.addEventListener('dragover', handleDragOver, false);
+    });
+  </script>
 </body>
 </html>
