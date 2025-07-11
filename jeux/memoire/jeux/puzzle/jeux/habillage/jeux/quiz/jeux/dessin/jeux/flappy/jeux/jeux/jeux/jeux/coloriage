@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coloriage Enfant</title>
+  <style>
+    body { text-align: center; background: #f0f0f0; }
+    canvas { border: 1px solid #000; background: #fff; cursor: crosshair; }
+    .palette { margin: 10px; }
+    .color { display: inline-block; width: 30px; height: 30px; cursor: pointer; border: 1px solid #000; margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Jeu de Coloriage</h1>
+  <canvas id="canvas" width="500" height="400"></canvas>
+  <div class="palette">
+    <div class="color" style="background: red;" data-color="red"></div>
+    <div class="color" style="background: green;" data-color="green"></div>
+    <div class="color" style="background: blue;" data-color="blue"></div>
+    <div class="color" style="background: yellow;" data-color="yellow"></div>
+    <div class="color" style="background: orange;" data-color="orange"></div>
+    <div class="color" style="background: black;" data-color="black"></div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let painting = false;
+    let color = 'black';
+
+    document.querySelectorAll('.color').forEach(el => {
+      el.addEventListener('click', () => {
+        color = el.getAttribute('data-color');
+      });
+    });
+
+    canvas.addEventListener('mousedown', () => painting = true);
+    canvas.addEventListener('mouseup', () => painting = false);
+    canvas.addEventListener('mousemove', draw);
+
+    function draw(e) {
+      if (!painting) return;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(e.offsetX, e.offsetY, 5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  </script>
+</body>
+</html>
