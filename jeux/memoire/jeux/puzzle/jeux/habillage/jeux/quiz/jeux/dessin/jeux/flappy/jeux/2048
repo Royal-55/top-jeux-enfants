@@ -1,10 +1,121 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>jeux/2048</title>
+  <meta charset="UTF-8" />
+  <title>2048 Simplifié</title>
+  <style>
+    body { font-family: Arial; text-align: center; background: #faf8ef; }
+    #grid { display: grid; grid-template-columns: repeat(4, 100px); grid-gap: 10px; margin: 50px auto; }
+    .cell {
+      width: 100px; height: 100px; background: #cdc1b4; font-size: 30px; display: flex; align-items: center; justify-content: center;
+    }
+  </style>
 </head>
 <body>
-  <h1>2048 - Bientôt disponible !</h1>
+  <h1>2048 Simplifié</h1>
+  <div id="grid"></div>
+
+  <script>
+    let grid = [];
+    let gridElement = document.getElementById('grid');
+
+    function init() {
+      grid = Array(4).fill().map(() => Array(4).fill(0));
+      addNumber(); addNumber();
+      draw();
+    }
+
+    function addNumber() {
+      let options = [];
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          if (grid[i][j] === 0) options.push({ x: i, y: j });
+        }
+      }
+      if (options.length > 0) {
+        let spot = options[Math.floor(Math.random() * options.length)];
+        grid[spot.x][spot.y] = Math.random() > 0.5 ? 2 : 4;
+      }
+    }
+
+    function draw() {
+      gridElement.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          let cell = document.createElement('div');
+          cell.className = 'cell';
+          if (grid[i][j] !== 0) cell.textContent = grid[i][j];
+          gridElement.appendChild(cell);
+        }
+      }
+    }
+
+    function slide(row) {
+      let arr = row.filter(val => val);
+      let missing = 4 - arr.length;
+      let zeros = Array(missing).fill(0);
+      arr = zeros.concat(arr);
+      return arr;
+    }
+
+    function combine(row) {
+      for (let i = 3; i >= 1; i--) {
+        if (row[i] === row[i-1] && row[i] !== 0) {
+          row[i] *= 2;
+          row[i-1] = 0;
+        }
+      }
+      return row;
+    }
+
+    function operate(row) {
+      row = slide(row);
+      row = combine(row);
+      row = slide(row);
+      return row;
+    }
+
+    window.addEventListener('keydown', function(e) {
+      let flipped = false, rotated = false, played = true;
+
+      if (e.key === 'ArrowRight') {
+        // Do nothing, default is right
+      } else if (e.key === 'ArrowLeft') {
+        grid = grid.map(row => row.reverse());
+        flipped = true;
+      } else if (e.key === 'ArrowUp') {
+        grid = rotateGrid(grid);
+        grid = grid.map(row => row.reverse());
+        flipped = true; rotated = true;
+      } else if (e.key === 'ArrowDown') {
+        grid = rotateGrid(grid);
+        rotated = true;
+      } else {
+        played = false;
+      }
+
+      if (played) {
+        grid = grid.map(row => operate(row));
+
+        if (flipped) grid = grid.map(row => row.reverse());
+        if (rotated) grid = rotateGrid(grid);
+
+        addNumber();
+        draw();
+      }
+    });
+
+    function rotateGrid(matrix) {
+      let result = Array(4).fill().map(() => Array(4).fill(0));
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          result[i][j] = matrix[j][i];
+        }
+      }
+      return result;
+    }
+
+    init();
+  </script>
 </body>
 </html>
