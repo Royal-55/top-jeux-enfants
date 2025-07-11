@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mini Course</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #333; }
+    canvas { display: block; margin: 0 auto; background: #555; }
+  </style>
+</head>
+<body>
+  <canvas id="game" width="400" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    let player = { x: 200, y: 500, w: 40, h: 80, speed: 5 };
+    let obstacles = [];
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') player.x -= player.speed;
+      if (e.key === 'ArrowRight') player.x += player.speed;
+    });
+
+    function drawPlayer() {
+      ctx.fillStyle = 'red';
+      ctx.fillRect(player.x, player.y, player.w, player.h);
+    }
+
+    function drawObstacles() {
+      if (Math.random() < 0.02) {
+        obstacles.push({ x: Math.random() * (canvas.width - 40), y: -80, w: 40, h: 80 });
+      }
+
+      obstacles.forEach(o => {
+        o.y += 4;
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(o.x, o.y, o.w, o.h);
+
+        if (player.x < o.x + o.w &&
+            player.x + player.w > o.x &&
+            player.y < o.y + o.h &&
+            player.y + player.h > o.y) {
+          alert('Collision ! Game Over');
+          document.location.reload();
+        }
+      });
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPlayer();
+      drawObstacles();
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>
