@@ -11,6 +11,7 @@ import websockets
 import time
 from datetime import datetime
 import os
+import base64
 from dotenv import load_dotenv
 
 # Load environment variables
