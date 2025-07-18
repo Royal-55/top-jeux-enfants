@@ -342,6 +342,334 @@ class BackendTester:
         
         return False
     
+    def test_geolocation_detection(self):
+        """Test POST /api/detect-zone - Geolocation auto-detection"""
+        print("\n=== Testing Geolocation Auto-Detection ===")
+        try:
+            # Test with Abidjan coordinates
+            abidjan_coords = {"latitude": 5.36, "longitude": -4.0083}
+            response = self.session.post(
+                f"{API_BASE_URL}/detect-zone",
+                json=abidjan_coords,
+                headers={'Content-Type': 'application/json'}
+            )
+            print(f"Abidjan detection - Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                detected_zone = data.get('zone')
+                print(f"Detected zone for Abidjan: {detected_zone}")
+                
+                # Test with Bouaké coordinates
+                bouake_coords = {"latitude": 7.6906, "longitude": -5.03}
+                response2 = self.session.post(
+                    f"{API_BASE_URL}/detect-zone",
+                    json=bouake_coords,
+                    headers={'Content-Type': 'application/json'}
+                )
+                print(f"Bouaké detection - Status Code: {response2.status_code}")
+                
+                if response2.status_code == 200:
+                    data2 = response2.json()
+                    detected_zone2 = data2.get('zone')
+                    print(f"Detected zone for Bouaké: {detected_zone2}")
+                    
+                    # Verify correct zone detection
+                    if detected_zone == "Abidjan" and detected_zone2 == "Bouaké":
+                        self.test_results['geolocation_detection'] = True
+                        print("✅ Geolocation auto-detection working correctly")
+                        return True
+                    else:
+                        print(f"❌ Zone detection incorrect. Expected Abidjan/Bouaké, got {detected_zone}/{detected_zone2}")
+                else:
+                    print(f"❌ Bouaké detection failed: {response2.text}")
+            else:
+                print(f"❌ Abidjan detection failed: {response.text}")
+        except Exception as e:
+            print(f"❌ Exception occurred: {str(e)}")
+        
+        return False
+    
+    def test_photo_upload_system(self):
+        """Test enhanced alert creation with photos"""
+        print("\n=== Testing Photo Upload System ===")
+        try:
+            # Create a small base64 encoded test image (1x1 pixel PNG)
+            test_image_b64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChAI9jU77zgAAAABJRU5ErkJggg=="
+            
+            alert_data = {
+                "title": "Accident avec photos",
+                "description": "Accident grave sur la route d'Aboisso. Photos des dégâts disponibles.",
+                "alert_type": "accident",
+                "zone": "Abidjan",
+                "reporter_name": "Koffi Aya",
+                "latitude": 5.36,
+                "longitude": -4.0083,
+                "photos": [test_image_b64, test_image_b64],  # Two test photos
+                "location_accuracy": 10.5
+            }
+            
+            response = self.session.post(
+                f"{API_BASE_URL}/alerts",
+                json=alert_data,
+                headers={'Content-Type': 'application/json'}
+            )
+            print(f"Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                alert = response.json()
+                photos = alert.get('photos', [])
+                print(f"Number of photos stored: {len(photos)}")
+                print(f"Alert has GPS coordinates: lat={alert.get('latitude')}, lon={alert.get('longitude')}")
+                print(f"Location accuracy: {alert.get('location_accuracy')}")
+                
+                # Verify photos are stored correctly
+                if len(photos) == 2 and all(photo == test_image_b64 for photo in photos):
+                    self.test_results['photo_upload_system'] = True
+                    print("✅ Photo upload system working correctly")
+                    return True
+                else:
+                    print("❌ Photos not stored correctly")
+            else:
+                print(f"❌ Failed with status code: {response.status_code}")
+                print(f"Response: {response.text}")
+        except Exception as e:
+            print(f"❌ Exception occurred: {str(e)}")
+        
+        return False
+    
+    def test_voting_system(self):
+        """Test community voting and validation system"""
+        print("\n=== Testing Voting and Validation System ===")
+        try:
+            # First create an alert to vote on
+            alert_data = {
+                "title": "Vol de téléphone confirmé",
+                "description": "Téléphone Samsung volé au marché de Cocody",
+                "alert_type": "vol",
+                "zone": "Abidjan",
+                "reporter_name": "Adjoua Marie"
+            }
+            
+            response = self.session.post(
+                f"{API_BASE_URL}/alerts",
+                json=alert_data,
+                headers={'Content-Type': 'application/json'}
+            )
+            
+            if response.status_code == 200:
+                alert = response.json()
+                alert_id = alert.get('id')
+                print(f"Created alert for voting test: {alert_id}")
+                
+                # Test voting with different voter IDs
+                voters = ["voter_192.168.1.1", "voter_192.168.1.2", "voter_192.168.1.3", "voter_192.168.1.4"]
+                
+                for i, voter_id in enumerate(voters[:3]):  # First 3 votes
+                    vote_data = {"voter_id": voter_id}
+                    vote_response = self.session.post(
+                        f"{API_BASE_URL}/alerts/{alert_id}/vote",
+                        json=vote_data,
+                        headers={'Content-Type': 'application/json'}
+                    )
+                    print(f"Vote {i+1} - Status Code: {vote_response.status_code}")
+                    
+                    if vote_response.status_code == 200:
+                        vote_result = vote_response.json()
+                        votes = vote_result.get('votes')
+                        verified = vote_result.get('verified')
+                        print(f"Votes: {votes}, Verified: {verified}")
+                        
+                        # After 3 votes, should be verified
+                        if i == 2 and verified:
+                            print("✅ Auto-verification after 3 votes working")
+                
+                # Test double voting prevention
+                double_vote_data = {"voter_id": voters[0]}  # Same voter as first vote
+                double_vote_response = self.session.post(
+                    f"{API_BASE_URL}/alerts/{alert_id}/vote",
+                    json=double_vote_data,
+                    headers={'Content-Type': 'application/json'}
+                )
+                print(f"Double vote prevention - Status Code: {double_vote_response.status_code}")
+                
+                if double_vote_response.status_code == 400:
+                    print("✅ Double voting prevention working")
+                    self.test_results['voting_system'] = True
+                    return True
+                else:
+                    print("❌ Double voting prevention failed")
+            else:
+                print(f"❌ Failed to create alert for voting test: {response.text}")
+        except Exception as e:
+            print(f"❌ Exception occurred: {str(e)}")
+        
+        return False
+    
+    def test_statistics_endpoint(self):
+        """Test GET /api/stats - Statistics and analytics"""
+        print("\n=== Testing Statistics and Analytics ===")
+        try:
+            response = self.session.get(f"{API_BASE_URL}/stats")
+            print(f"Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                stats = response.json()
+                print(f"Statistics received: {json.dumps(stats, indent=2)}")
+                
+                # Check required fields
+                required_fields = ['total_alerts', 'active_alerts', 'verified_alerts', 'types_stats', 'zones_stats']
+                if all(field in stats for field in required_fields):
+                    print(f"Total alerts: {stats['total_alerts']}")
+                    print(f"Active alerts: {stats['active_alerts']}")
+                    print(f"Verified alerts: {stats['verified_alerts']}")
+                    print(f"Types stats: {stats['types_stats']}")
+                    print(f"Top zones: {len(stats['zones_stats'])} zones")
+                    
+                    self.test_results['statistics_endpoint'] = True
+                    print("✅ Statistics endpoint working correctly")
+                    return True
+                else:
+                    print("❌ Missing required statistics fields")
+            else:
+                print(f"❌ Failed with status code: {response.status_code}")
+                print(f"Response: {response.text}")
+        except Exception as e:
+            print(f"❌ Exception occurred: {str(e)}")
+        
+        return False
+    
+    def test_nearby_alerts(self):
+        """Test GET /api/alerts/nearby - Location-based queries"""
+        print("\n=== Testing Nearby Alerts API ===")
+        try:
+            # First create some alerts with GPS coordinates
+            alerts_to_create = [
+                {
+                    "title": "Accident près d'Abidjan",
+                    "description": "Collision sur l'autoroute",
+                    "alert_type": "accident",
+                    "zone": "Abidjan",
+                    "reporter_name": "Jean Kouassi",
+                    "latitude": 5.36,
+                    "longitude": -4.0083
+                },
+                {
+                    "title": "Vol à Bouaké",
+                    "description": "Cambriolage signalé",
+                    "alert_type": "vol",
+                    "zone": "Bouaké",
+                    "reporter_name": "Marie Adjoua",
+                    "latitude": 7.6906,
+                    "longitude": -5.03
+                }
+            ]
+            
+            created_alerts = []
+            for alert_data in alerts_to_create:
+                response = self.session.post(
+                    f"{API_BASE_URL}/alerts",
+                    json=alert_data,
+                    headers={'Content-Type': 'application/json'}
+                )
+                if response.status_code == 200:
+                    created_alerts.append(response.json())
+            
+            print(f"Created {len(created_alerts)} alerts with GPS coordinates")
+            
+            # Test nearby alerts query for Abidjan area
+            params = {
+                "latitude": 5.36,
+                "longitude": -4.0083,
+                "radius": 0.1  # Small radius
+            }
+            
+            response = self.session.get(f"{API_BASE_URL}/alerts/nearby", params=params)
+            print(f"Nearby alerts query - Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                nearby_alerts = response.json()
+                print(f"Found {len(nearby_alerts)} nearby alerts")
+                
+                # Should find at least the Abidjan alert
+                abidjan_alerts = [alert for alert in nearby_alerts if alert.get('zone') == 'Abidjan']
+                if len(abidjan_alerts) > 0:
+                    self.test_results['nearby_alerts'] = True
+                    print("✅ Nearby alerts API working correctly")
+                    return True
+                else:
+                    print("❌ No nearby alerts found for Abidjan coordinates")
+            else:
+                print(f"❌ Failed with status code: {response.status_code}")
+                print(f"Response: {response.text}")
+        except Exception as e:
+            print(f"❌ Exception occurred: {str(e)}")
+        
+        return False
+    
+    def test_enhanced_alert_creation(self):
+        """Test enhanced alert creation with all new fields"""
+        print("\n=== Testing Enhanced Alert Creation ===")
+        try:
+            # Create alert with all enhanced features
+            test_image_b64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChAI9jU77zgAAAABJRU5ErkJggg=="
+            
+            enhanced_alert_data = {
+                "title": "Catastrophe naturelle - Inondation",
+                "description": "Inondation importante dans le quartier de Marcory suite aux fortes pluies. Plusieurs maisons touchées.",
+                "alert_type": "catastrophe",
+                "zone": "",  # Will be auto-detected
+                "reporter_name": "Koffi Adjoua",
+                "latitude": 5.36,
+                "longitude": -4.0083,
+                "photos": [test_image_b64],
+                "location_accuracy": 15.2
+            }
+            
+            response = self.session.post(
+                f"{API_BASE_URL}/alerts",
+                json=enhanced_alert_data,
+                headers={'Content-Type': 'application/json'}
+            )
+            print(f"Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                alert = response.json()
+                print(f"Created enhanced alert ID: {alert.get('id')}")
+                print(f"Auto-detected zone: {alert.get('zone')}")
+                print(f"GPS coordinates: {alert.get('latitude')}, {alert.get('longitude')}")
+                print(f"Photos count: {len(alert.get('photos', []))}")
+                print(f"Location accuracy: {alert.get('location_accuracy')}")
+                print(f"Votes: {alert.get('votes')}")
+                print(f"Verified: {alert.get('verified')}")
+                
+                # Verify all enhanced fields are present and correct
+                checks = [
+                    alert.get('zone') == 'Abidjan',  # Auto-detected from coordinates
+                    alert.get('latitude') == 5.36,
+                    alert.get('longitude') == -4.0083,
+                    len(alert.get('photos', [])) == 1,
+                    alert.get('location_accuracy') == 15.2,
+                    alert.get('votes') == 0,
+                    alert.get('verified') == False,
+                    'voters' in alert
+                ]
+                
+                if all(checks):
+                    self.test_results['enhanced_alert_creation'] = True
+                    print("✅ Enhanced alert creation working correctly")
+                    return True
+                else:
+                    print("❌ Some enhanced fields not working correctly")
+                    print(f"Checks results: {checks}")
+            else:
+                print(f"❌ Failed with status code: {response.status_code}")
+                print(f"Response: {response.text}")
+        except Exception as e:
+            print(f"❌ Exception occurred: {str(e)}")
+        
+        return False
+    
     def run_all_tests(self):
         """Run all backend tests"""
         print("🚀 Starting Backend API Tests for Community Alerts System")
