@@ -672,8 +672,8 @@ class BackendTester:
     
     def run_all_tests(self):
         """Run all backend tests"""
-        print("🚀 Starting Backend API Tests for Community Alerts System")
-        print("=" * 60)
+        print("🚀 Starting Enhanced Backend API Tests for Community Alerts System")
+        print("=" * 70)
         
         # Test basic endpoints
         self.test_zones_endpoint()
@@ -684,6 +684,15 @@ class BackendTester:
         self.test_get_alerts()
         self.test_get_alert_by_id()
         self.test_update_alert()
+        
+        # Test enhanced features (HIGH PRIORITY)
+        print("\n🌟 Testing Enhanced Features...")
+        self.test_geolocation_detection()
+        self.test_photo_upload_system()
+        self.test_voting_system()
+        self.test_statistics_endpoint()
+        self.test_nearby_alerts()
+        self.test_enhanced_alert_creation()
         
         # Test WebSocket functionality
         print("\n🔌 Testing WebSocket functionality...")
