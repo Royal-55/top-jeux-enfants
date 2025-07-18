@@ -37,7 +37,14 @@ class BackendTester:
             'get_alert_by_id': False,
             'update_alert': False,
             'websocket_connection': False,
-            'websocket_broadcast': False
+            'websocket_broadcast': False,
+            # New enhanced features
+            'geolocation_detection': False,
+            'photo_upload_system': False,
+            'voting_system': False,
+            'statistics_endpoint': False,
+            'nearby_alerts': False,
+            'enhanced_alert_creation': False
         }
     
     def test_zones_endpoint(self):
